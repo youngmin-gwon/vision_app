@@ -8,6 +8,7 @@ sealed class CamException implements Exception {
   const factory CamException.alreadyActive() = AlreadyActiveCamException;
   const factory CamException.accessDenied() = AccessDeniedCamException;
   const factory CamException.notFound() = AccessDeniedCamException;
+  const factory CamException.connectionFailed() = AccessDeniedCamException;
   const factory CamException.captureFailed({required String message}) =
       CaptureFailedCamException;
   const factory CamException.recordFailed({required String message}) =
@@ -24,6 +25,10 @@ class AlreadyActiveCamException extends CamException {
 
 class AccessDeniedCamException extends CamException {
   const AccessDeniedCamException();
+}
+
+class FailedConnectionCamException extends CamException {
+  const FailedConnectionCamException();
 }
 
 class NotFoundCamException extends CamException {

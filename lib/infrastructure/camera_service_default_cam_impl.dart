@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
@@ -6,21 +7,26 @@ import 'package:kmong/application/camera.dart';
 import 'package:kmong/application/camera_service.dart';
 
 class CameraServiceDefaultCamImpl implements CameraService {
-  @override
-  Future<List<Camera>> getCameras() {
-    // TODO: implement getCameras
-    throw UnimplementedError();
-  }
+  final List<CameraDescription> _cameras = [];
 
   CameraController? _controller;
 
   bool _isInitialized = false;
 
   @override
+  Future<List<Camera>> getCameras() async {
+    if (_cameras.isEmpty) {
+      _cameras.addAll(await availableCameras());
+    }
+
+    return _cameras.map((e) => BuiltInCamera(e.name)).toList();
+  }
+
+  @override
   bool get isInitialized => _controller != null && _isInitialized;
 
   @override
-  Future<void> initialize() async {
+  Future<void> initialize(Camera camera) async {
     if (isInitialized) {
       throw const CamException.alreadyActive();
     }
@@ -53,8 +59,14 @@ class CameraServiceDefaultCamImpl implements CameraService {
   }
 
   @override
-  Stream<Image> takeVideo() {
+  Stream<Image> subscribe() {
     // TODO: implement takeVideo
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<void> unsubscribe() {
+    // TODO: implement unsubscribe
     throw UnimplementedError();
   }
 
@@ -67,4 +79,16 @@ class CameraServiceDefaultCamImpl implements CameraService {
     _controller?.dispose();
     _isInitialized = false;
   }
+}
+
+class BuiltInCamera<String> implements Camera {
+  const BuiltInCamera(this._name);
+
+  final String _name;
+
+  @override
+  String get identifier => _name;
+
+  @override
+  CameraType get type => CameraType.builtIn;
 }
