@@ -2,9 +2,16 @@ import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:kmong/application/cam_exception.dart';
+import 'package:kmong/application/camera.dart';
 import 'package:kmong/application/camera_service.dart';
 
 class CameraServiceDefaultCamImpl implements CameraService {
+  @override
+  Future<List<Camera>> getCameras() {
+    // TODO: implement getCameras
+    throw UnimplementedError();
+  }
+
   CameraController? _controller;
 
   bool _isInitialized = false;
@@ -19,7 +26,7 @@ class CameraServiceDefaultCamImpl implements CameraService {
     }
 
     try {
-      final cameras = await availableCameras();
+      final List<CameraDescription> cameras = await availableCameras();
       _controller = CameraController(cameras[0], ResolutionPreset.medium);
       await _controller!.initialize();
       _isInitialized = true;
